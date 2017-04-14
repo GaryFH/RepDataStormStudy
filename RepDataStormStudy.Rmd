@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 #                       Data Processing
-###### The data ("repdata_data_StormData.csv.bz2") was provided as part of the assignment documents and is included in the Github repo (https://github.com/GaryFH/RepDataStormStudy).  The data is "read" in, converted to a tbl_df and stored as "d1" with the following code:
+##### The data ("repdata_data_StormData.csv.bz2") was provided as part of the assignment documents and is included in the Github repo (https://github.com/GaryFH/RepDataStormStudy).  The data is "read" in, converted to a tbl_df and stored as "d1" with the following code:
 
 ```{r ReadData}
 library(dplyr)

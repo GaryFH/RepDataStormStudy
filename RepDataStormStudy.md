@@ -95,11 +95,16 @@ d6<-arrange(d5,desc(FATALITIES))
 d7<-head(d6,8)
 g<-ggplot(d7,aes(EVTYPE,FATALITIES))
 plotfatal<-g+geom_col(fill="yellow")+ geom_text(aes(label=FATALITIES), vjust=1.5, color="black")
-
-print(plotfatal,fig.width=8,fig.height=4)
+plotfatal
 ```
 
 ![](RepDataStormStudy_files/figure-html/fatality-1.png)<!-- -->
+
+```r
+print(plotfatal,fig.width=8,fig.height=4)
+```
+
+![](RepDataStormStudy_files/figure-html/fatality-2.png)<!-- -->
 
 
 

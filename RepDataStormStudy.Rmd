@@ -5,9 +5,9 @@ output:
     keep_md: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+######{r setup, include=FALSE}
+######knitr::opts_chunk$set(echo = TRUE)
+
 
 #                       Synopsis
 #####    Storms and other severe weather events can cause both public health and economic problems for communities and municipalities.  

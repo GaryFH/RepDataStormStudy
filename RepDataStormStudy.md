@@ -1,5 +1,7 @@
 # Storm Data Analysis of National Weather Service Data
 
+######{r setup, include=FALSE}
+######knitr::opts_chunk$set(echo = TRUE)
 
 
 #                       Synopsis

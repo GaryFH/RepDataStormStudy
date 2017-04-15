@@ -43,11 +43,22 @@ d5<-summarise(d4,FATALITIES=sum(FATALITIES))
 d6<-arrange(d5,desc(FATALITIES))
 d7<-head(d6,8)
 g<-ggplot(d7,aes(EVTYPE,FATALITIES))
-plotfatal<-g+geom_col(fill="yellow")+ geom_text(aes(label=FATALITIES), vjust=1.5, color="black")
+plotfatal<-g+geom_col(fill="yellow")+ geom_text(aes(label=FATALITIES), vjust=1.5, color="black")+labs(x="Weather event type" ,y="Total Fatalities",title="Top eight most dangerous weather events")
 plotfatal
 ```
-
-######print(plotfatal,fig.width=8,fig.height=4)
+#### Notes
+```{r property damage}
+d2<-group_by(d1,EVTYPE)
+dd3<-select(d2,EVTYPE,PROPDMG:CROPDMGEXP)
+dd4<-filter(dd3,PROPDMG,!is.na(PROPDMG))
+dd5<-summarise(dd4,PROPDMG=sum(PROPDMG)/100000)
+dd6<-arrange(dd5,desc(PROPDMG))
+dd7<-head(dd6,8)
+dd7
+g1<-ggplot(dd7,aes(EVTYPE,PROPDMG))
+plotdamage<-g1+geom_col(fill="orange")+ geom_text(aes(label=PROPDMG), vjust=1.5)+labs(x="Weather event type",y="Total Property damage in billions",title="Top eight most expensive weather events")
+plotdamage
+```
 
 
 

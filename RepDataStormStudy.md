@@ -13,7 +13,7 @@
 
 
 #                       Data Processing
-###### The data ("repdata_data_StormData.csv.bz2") was provided as part of the assignment documents and is included in the Github repo (https://github.com/GaryFH/RepDataStormStudy).  The data is "read" in, converted to a tbl_df and stored as "d1" with the following code:
+##### The data ("repdata_data_StormData.csv.bz2") was provided as part of the assignment documents and is included in the Github repo (https://github.com/GaryFH/RepDataStormStudy).  The data is "read" in, converted to a tbl_df and stored as "d1" with the following code:
 
 
 ```r
@@ -83,4 +83,23 @@ d1
 ## #   STATEOFFIC <chr>, ZONENAMES <chr>, LATITUDE <dbl>, LONGITUDE <dbl>,
 ## #   LATITUDE_E <dbl>, LONGITUDE_ <dbl>, REMARKS <chr>, REFNUM <dbl>
 ```
+##### 985 different types of weather events - future investigations may want to look and combining some of these events (i.e all heat related events) The following code produces a plot that shows the top eight weather events based on fatalities.
+
+
+```r
+d2<-group_by(d1,EVTYPE)
+d3<-select(d2,EVTYPE,FATALITIES,INJURIES)
+d4<-filter(d3,FATALITIES,!is.na(FATALITIES))
+d5<-summarise(d4,FATALITIES=sum(FATALITIES))
+d6<-arrange(d5,desc(FATALITIES))
+d7<-head(d6,8)
+g<-ggplot(d7,aes(EVTYPE,FATALITIES))
+plotfatal<-g+geom_col(fill="yellow")+ geom_text(aes(label=FATALITIES), vjust=1.5, color="black")
+
+print(plotfatal,fig.width=8,fig.height=4)
+```
+
+![](RepDataStormStudy_files/figure-html/fatality-1.png)<!-- -->
+
+
 

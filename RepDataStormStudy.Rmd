@@ -33,4 +33,20 @@ d1<-tbl_df(c1)
 ```{r InitialLook}
 d1
 ```
+##### 985 different types of weather events - future investigations may want to look and combining some of these events (i.e all heat related events) The following code produces a plot that shows the top eight weather events based on fatalities.
+
+```{r fatality}
+d2<-group_by(d1,EVTYPE)
+d3<-select(d2,EVTYPE,FATALITIES,INJURIES)
+d4<-filter(d3,FATALITIES,!is.na(FATALITIES))
+d5<-summarise(d4,FATALITIES=sum(FATALITIES))
+d6<-arrange(d5,desc(FATALITIES))
+d7<-head(d6,8)
+g<-ggplot(d7,aes(EVTYPE,FATALITIES))
+plotfatal<-g+geom_col(fill="yellow")+ geom_text(aes(label=FATALITIES), vjust=1.5, color="black")
+
+print(plotfatal,fig.width=8,fig.height=4)
+```
+
+
 

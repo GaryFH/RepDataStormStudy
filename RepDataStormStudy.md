@@ -102,11 +102,8 @@ plotfatal
 
 ![](RepDataStormStudy_files/figure-html/fatality-1.png)<!-- -->
 
-```r
-print(plotfatal,fig.width=8,fig.height=4)
-```
+######print(plotfatal,fig.width=8,fig.height=4)
 
-![](RepDataStormStudy_files/figure-html/fatality-2.png)<!-- -->
 
 
 

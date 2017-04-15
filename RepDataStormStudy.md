@@ -96,13 +96,44 @@ d5<-summarise(d4,FATALITIES=sum(FATALITIES))
 d6<-arrange(d5,desc(FATALITIES))
 d7<-head(d6,8)
 g<-ggplot(d7,aes(EVTYPE,FATALITIES))
-plotfatal<-g+geom_col(fill="yellow")+ geom_text(aes(label=FATALITIES), vjust=1.5, color="black")
+plotfatal<-g+geom_col(fill="yellow")+ geom_text(aes(label=FATALITIES), vjust=1.5, color="black")+labs(x="Weather event type" ,y="Total Fatalities",title="Top eight most dangerous weather events")
 plotfatal
 ```
 
 ![](RepDataStormStudy_files/figure-html/fatality-1.png)<!-- -->
+#### Notes
 
-######print(plotfatal,fig.width=8,fig.height=4)
+```r
+d2<-group_by(d1,EVTYPE)
+dd3<-select(d2,EVTYPE,PROPDMG:CROPDMGEXP)
+dd4<-filter(dd3,PROPDMG,!is.na(PROPDMG))
+dd5<-summarise(dd4,PROPDMG=sum(PROPDMG)/100000)
+dd6<-arrange(dd5,desc(PROPDMG))
+dd7<-head(dd6,8)
+dd7
+```
+
+```
+## # A tibble: 8 × 2
+##               EVTYPE   PROPDMG
+##                <chr>     <dbl>
+## 1            TORNADO 32.122582
+## 2        FLASH FLOOD 14.201246
+## 3          TSTM WIND 13.359656
+## 4              FLOOD  8.999385
+## 5  THUNDERSTORM WIND  8.768442
+## 6               HAIL  6.886934
+## 7          LIGHTNING  6.033518
+## 8 THUNDERSTORM WINDS  4.462932
+```
+
+```r
+g1<-ggplot(dd7,aes(EVTYPE,PROPDMG))
+plotdamage<-g1+geom_col(fill="orange")+ geom_text(aes(label=PROPDMG), vjust=1.5)+labs(x="Weather event type",y="Total Property damage in billions",title="Top eight most expensive weather events")
+plotdamage
+```
+
+![](RepDataStormStudy_files/figure-html/property damage-1.png)<!-- -->
 
 
 

@@ -58,6 +58,7 @@ dd7
 g1<-ggplot(dd7,aes(EVTYPE,PROPDMG))
 plotdamage<-g1+geom_col(fill="orange")+ geom_text(aes(label=PROPDMG), vjust=1.5)+labs(x="Weather event type",y="Total Property damage in billions",title="Top eight most expensive weather events")
 plotdamage
+print(plotdamage,fig.height=4)
 ```
 
 

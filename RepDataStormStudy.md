@@ -55,7 +55,7 @@ library(ggplot2)
 c1<-read.csv("repdata_data_StormData.csv.bz2",stringsAsFactors = FALSE)
 d1<-tbl_df(c1)
 ```
-##### The data is initially examined with the following code:
+#### The data is initially examined with the following code:
 
 
 ```r
@@ -85,56 +85,118 @@ d1
 ## #   STATEOFFIC <chr>, ZONENAMES <chr>, LATITUDE <dbl>, LONGITUDE <dbl>,
 ## #   LATITUDE_E <dbl>, LONGITUDE_ <dbl>, REMARKS <chr>, REFNUM <dbl>
 ```
-##### 985 different types of weather events - future investigations may want to look and combining some of these events (i.e all heat related events) The following code produces a plot that shows the top eight weather events based on fatalities.
+
+
+####985 different types of weather events - future investigations may want to look and combining some of these events (i.e all heat related events and/or flood related events). The following code produces a plot that shows the top eight weather events based on fatalities.
 
 
 ```r
 d2<-group_by(d1,EVTYPE)
 d3<-select(d2,EVTYPE,FATALITIES,INJURIES)
-d4<-filter(d3,FATALITIES,!is.na(FATALITIES))
-d5<-summarise(d4,FATALITIES=sum(FATALITIES))
+d4<-d3##d4<-filter(d3,FATALITIES,!is.na(FATALITIES))
+d5<-summarise(d4,FATALITIES=sum(FATALITIES),INJURIES=sum(INJURIES))
 d6<-arrange(d5,desc(FATALITIES))
 d7<-head(d6,8)
-g<-ggplot(d7,aes(EVTYPE,FATALITIES))
-plotfatal<-g+geom_col(fill="yellow")+ geom_text(aes(label=FATALITIES), vjust=1.5, color="black")+labs(x="Weather event type" ,y="Total Fatalities",title="Top eight most dangerous weather events")
+d7
+```
+
+```
+## # A tibble: 8 × 3
+##           EVTYPE FATALITIES INJURIES
+##            <chr>      <dbl>    <dbl>
+## 1        TORNADO       5633    91346
+## 2 EXCESSIVE HEAT       1903     6525
+## 3    FLASH FLOOD        978     1777
+## 4           HEAT        937     2100
+## 5      LIGHTNING        816     5230
+## 6      TSTM WIND        504     6957
+## 7          FLOOD        470     6789
+## 8    RIP CURRENT        368      232
+```
+
+```r
+g<-ggplot(d7,aes(x=reorder(EVTYPE,-FATALITIES),y=FATALITIES))
+plotfatal<-g+geom_col(fill="yellow")+theme(axis.text.x = element_text(angle = 90, hjust = 1))+geom_text(aes(label=FATALITIES), vjust=1.5, color="black")+labs(x="Weather Event",title="Eight most Deadly Weather Events US 1950-2011")
 plotfatal
 ```
 
 ![](RepDataStormStudy_files/figure-html/fatality-1.png)<!-- -->
-#### Notes
+
+
+
+#### The following code shows the top eight weather events based on injuries.
+
 
 ```r
-d2<-group_by(d1,EVTYPE)
-dd3<-select(d2,EVTYPE,PROPDMG:CROPDMGEXP)
-dd4<-filter(dd3,PROPDMG,!is.na(PROPDMG))
-dd5<-summarise(dd4,PROPDMG=sum(PROPDMG)/100000)
-dd6<-arrange(dd5,desc(PROPDMG))
+g2<-ggplot(d7,aes(x=reorder(EVTYPE,-INJURIES),y=INJURIES))
+plotinjury<-g2+geom_col(fill="magenta")+labs(x="Weather Event",title="Eight most Injuries due to Weather Events US 1950-2011")+theme(axis.text.x = element_text(angle = 90, hjust = 1))+ geom_text(aes(label=INJURIES), vjust=1.5, color="black")
+plotinjury
+```
+
+![](RepDataStormStudy_files/figure-html/injury-1.png)<!-- -->
+
+
+
+#### The original dataset showing damage amounts in dollars are stored in two variables (PROPDMG & CROPDMG) the values in these columns needs to be multiplied by factors that vary per observation - the code below adds two new columns(property damage multiplier - "pdmltplyr" & crop damage multiplier - "cdmltplyr") that make the character codes found in the dataset into numeric factors for each observation.
+
+
+```r
+dd2<-group_by(d1,EVTYPE)
+dd25<-mutate(dd2, pdmultplyr = 
+        ifelse(PROPDMGEXP == "h" | PROPDMGEXP == "H", 100,
+        ifelse(PROPDMGEXP == "k" | PROPDMGEXP == "K", 1000,
+        ifelse(PROPDMGEXP == "m" | PROPDMGEXP == "M", 1000000,
+        ifelse(PROPDMGEXP == "b" | PROPDMGEXP == "B", 1000000000, 0 )))))
+dd26<-mutate(dd25, cdmultplyr=
+        ifelse(CROPDMGEXP == "h" | CROPDMGEXP == "H", 100,
+        ifelse(CROPDMGEXP == "k" | CROPDMGEXP == "K", 1000,
+        ifelse(CROPDMGEXP == "m" | CROPDMGEXP == "M", 1000000,
+        ifelse(CROPDMGEXP == "b" | CROPDMGEXP == "B", 1000000000, 0 )))))
+dd3<-select(dd26,EVTYPE,PROPDMG:CROPDMGEXP,pdmultplyr,cdmultplyr)
+```
+
+
+
+####  The resulting "improved" dataframe can now be used to answer the question - which weather events caused the most damage?   The following code applys:
+
+
+```r
+dd35<-mutate(dd3,TotalDamage=(PROPDMG*pdmultplyr)+(CROPDMG*cdmultplyr))
+
+dd4<-filter(dd35,TotalDamage,!is.na(TotalDamage))
+
+dd5<-summarise(dd4,TotalDamage=sum(TotalDamage)/1000000000)
+dd6<-arrange(dd5,desc(TotalDamage))
 dd7<-head(dd6,8)
 dd7
 ```
 
 ```
 ## # A tibble: 8 × 2
-##               EVTYPE   PROPDMG
-##                <chr>     <dbl>
-## 1            TORNADO 32.122582
-## 2        FLASH FLOOD 14.201246
-## 3          TSTM WIND 13.359656
-## 4              FLOOD  8.999385
-## 5  THUNDERSTORM WIND  8.768442
-## 6               HAIL  6.886934
-## 7          LIGHTNING  6.033518
-## 8 THUNDERSTORM WINDS  4.462932
+##              EVTYPE TotalDamage
+##               <chr>       <dbl>
+## 1             FLOOD   150.31968
+## 2 HURRICANE/TYPHOON    71.91371
+## 3           TORNADO    57.35211
+## 4       STORM SURGE    43.32354
+## 5              HAIL    18.75822
+## 6       FLASH FLOOD    17.56213
+## 7           DROUGHT    15.01867
+## 8         HURRICANE    14.61023
 ```
 
 ```r
-g1<-ggplot(dd7,aes(EVTYPE,PROPDMG))
-plotdamage<-g1+geom_col(fill="orange")+ geom_text(aes(label=PROPDMG), vjust=1.5)+labs(x="Weather event type",y="Total Property damage in billions",title="Top eight most expensive weather events")
+g3<-ggplot(dd7,aes(x=reorder(EVTYPE,-TotalDamage),y=TotalDamage))
+plotdamage<-g3+geom_col(fill="orange")+labs(x="Weather Event",title="Eight highest damages due to Weather Events US 1950-2011")+ theme(axis.text.x = element_text(angle = 90, hjust = 1))+geom_text(aes(label=TotalDamage), vjust=1.5)+labs(x="Weather event type",y="Total Property damage in billions",title="Top eight most expensive weather events")
 plotdamage
 ```
 
 ![](RepDataStormStudy_files/figure-html/property damage-1.png)<!-- -->
 
 
+#                       SUMMARY
 
+#### Clearly Tornados are the most dangerous weather events per this data set - Tornadoes have the most injuries and most fatalities by far.
+
+#### Tornados also rank 3rd under most costly weather events behind both Hurricans/Typhoons(#2) and Floods(#1). There are 985 different types of weather events in the data - future investigations may want to look and combining some of these events (i.e all heat related events, Hurricane&Hurricane/Typhoon and/or flood&storm-surge, related events) to see additional patterns.
 

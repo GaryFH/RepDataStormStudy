@@ -100,7 +100,7 @@ plotdamage
 ```
 
 
-#                       SUMMARY
+#                       Results
 
 #### Clearly Tornados are the most dangerous weather events per this data set - Tornadoes have the most injuries and most fatalities by far.
 

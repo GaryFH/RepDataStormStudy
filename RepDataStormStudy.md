@@ -87,7 +87,7 @@ d1
 ```
 
 
-####985 different types of weather events - future investigations may want to look and combining some of these events (i.e all heat related events and/or flood related events). The following code produces a plot that shows the top eight weather events based on fatalities.
+#### There are 985 different types of weather events in the data - future investigations may want to look and combining some of these events (i.e all heat related events, Hurricane&Hurricane/Typhoon and/or flood&storm-surge, related events) to see additional patterns. The following code produces a plot that shows the top eight weather events based on fatalities.
 
 
 ```r
@@ -137,7 +137,7 @@ plotinjury
 
 
 
-#### The original dataset showing damage amounts in dollars are stored in two variables (PROPDMG & CROPDMG) the values in these columns needs to be multiplied by factors that vary per observation - the code below adds two new columns(property damage multiplier - "pdmltplyr" & crop damage multiplier - "cdmltplyr") that make the character codes found in the dataset into numeric factors for each observation.
+#### The original dataset showing damage amounts in dollars are stored in two variables (PROPDMG & CROPDMG) the values in these columns need to be multiplied by factors that vary per observation - the code below adds two new columns(property damage multiplier - "pdmltplyr" & crop damage multiplier - "cdmltplyr") that make the character codes found in the dataset into numeric factors for each observation.
 
 
 ```r
@@ -194,7 +194,7 @@ plotdamage
 ![](RepDataStormStudy_files/figure-html/property damage-1.png)<!-- -->
 
 
-#                       SUMMARY
+#                       Results
 
 #### Clearly Tornados are the most dangerous weather events per this data set - Tornadoes have the most injuries and most fatalities by far.
 
